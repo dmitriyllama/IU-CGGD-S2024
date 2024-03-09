@@ -11,8 +11,6 @@
 #include <algorithm>
 #include <optional>
 
-#include "../external/stb/stb_image_write.h"
-
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 static std::vector<char> readFile(const std::string& filename) {
