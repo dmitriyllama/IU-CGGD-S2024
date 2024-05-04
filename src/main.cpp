@@ -21,8 +21,13 @@
 #include "glm/vec3.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
 
+#define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
-#include "../external/stbi/stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "../external/tinygltf/tiny_gltf.h"
+
+
+const std::string MODEL_PATH = "../models/Models/Duck/glTF/Duck.gltf";
 
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -292,6 +297,8 @@ private:
         createTextureImage();
         createTextureImageView();
         createTextureSampler();
+
+//        loadModel();
 
         createVertexBuffer();
         createIndexBuffer();
@@ -899,6 +906,29 @@ private:
         if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create command pool!");
         }
+    }
+
+
+
+    void loadModel() {
+        tinygltf::Model model;
+        tinygltf::TinyGLTF loader;
+        std::string err;
+        std::string warn;
+
+        bool res = loader.LoadASCIIFromFile(&model, &err, &warn, MODEL_PATH);
+        if (!warn.empty()) {
+            std::cout << "WARN: " << warn << std::endl;
+        }
+        if (!err.empty()) {
+            std::cout << "ERR: " << err << std::endl;
+        }
+        if (!res) {
+            std::cout << "Failed to load glTF: " << MODEL_PATH << std::endl;
+        }
+
+        // TODO Parse the model (try https://github.com/syoyo/tinygltf/tree/release/examples/basic)
+        // I immediately regret trying to research this the day before the deadline
     }
 
 
